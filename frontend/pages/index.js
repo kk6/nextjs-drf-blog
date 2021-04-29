@@ -1,7 +1,9 @@
 import Image from "next/image";
 import Head from "next/head";
+import Post from "../components/post/post";
+import { getAllPostsData } from "../lib/posts";
 
-export default function Home() {
+export default function Home({ posts }) {
   return (
     <div>
       <Head>
@@ -20,6 +22,18 @@ export default function Home() {
         <div className="text-lg mb-3">BLOG POSTS</div>
         <div className="border w-14"></div>
       </div>
+      <div className="flex flex-wrap -m-4 mb-5">
+        {posts && posts.map((post) => <Post key={post.id} post={post} />)}
+      </div>
     </div>
   );
+}
+
+export async function getStaticProps() {
+  const posts = await getAllPostsData();
+
+  return {
+    props: { posts },
+    revalidate: 3,
+  };
 }
